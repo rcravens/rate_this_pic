@@ -33,11 +33,13 @@ function load_route(): void
 		}
 		else
 		{
-			dd( 'method ' . $method . ' does not exist' );
+			http_response_code( 500 );
+			view( 'errors.500' );
 		}
 	}
 	else
 	{
-		dd( 'route ' . $_SERVER[ 'REQUEST_URI' ] . ' does not exist' );
+		http_response_code( 404 );
+		view( 'errors.404', [] );
 	}
 }

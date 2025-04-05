@@ -3,7 +3,7 @@ use App\Http\PhotoController;
 use App\Http\UploadController;
 
 return [
-	'/'       => [ PhotoController::class, "index" ],
+	'/'       => [ PhotoController::class, "ssss" ],
 	'/upload' => [ UploadController::class, "index" ],
 	'/about'  => [ AboutController::class, "index" ],
 ];
