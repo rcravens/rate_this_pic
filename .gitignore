@@ -1,0 +1,15 @@
+.DS_Store
+/.phpunit.cache
+/node_modules
+/vendor
+.env
+.env.backup
+.phpactor.json
+.phpunit.result.cache
+npm-debug.log
+supervisord.pid
+/.fleet
+/.idea
+/.nova
+/.vscode
+/.zed
