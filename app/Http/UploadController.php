@@ -8,6 +8,6 @@ class UploadController
 	{
 		return view( 'upload.index', [
 			'page_header' => 'Upload',
-		] );
+		],           'layout.app' );
 	}
 }

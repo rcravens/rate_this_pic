@@ -8,6 +8,6 @@ class AboutController
 	{
 		return view( 'about.index', [
 			'page_header' => 'About',
-		] );
+		],           'layout.app' );
 	}
 }

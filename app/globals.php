@@ -1,20 +1,30 @@
 <?php
 
-function dd( $var )
+function dd( ...$vars )
 {
 	echo "<pre>";
-	var_dump( $var );
+	foreach ( $vars as $var )
+	{
+		var_dump( $var );
+	}
 	echo "</pre>";
 	die();
 }
 
-function view( $name, array $args = [] )
+function view( $name, array $args = [], $page_layout = null )
 {
-	extract( $args );
-
 	// convention photo.index ===> views/photo/index.view.php
 	$parts = explode( '.', $name );
 	$path  = '../views/' . implode( '/', $parts ) . '.view.php';
+
+	if ( isset( $page_layout ) )
+	{
+		$args[ 'page_content' ] = file_get_contents( $path );
+
+		return view( $page_layout, $args );
+	}
+
+	extract( $args );
 
 	return require $path;
 }

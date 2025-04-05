@@ -8,6 +8,6 @@ class PhotoController
 	{
 		return view( 'photo.index', [
 			'page_header' => 'Rate This Pic',
-		] );
+		],           'layout.app' );
 	}
 }

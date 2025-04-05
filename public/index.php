@@ -9,6 +9,7 @@ try
 }
 catch( \Throwable $e )
 {
+	dd( $e->getMessage() );
 	http_response_code( 500 );
 	view( 'errors.500' );
 }
