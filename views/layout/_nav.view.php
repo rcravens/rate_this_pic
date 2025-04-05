@@ -1,8 +1,8 @@
 <?php
 $nav_routes = [
-	'/'           => 'Photos',
-	'/upload.php' => 'Upload Photo',
-	'/about.php'  => 'About'
+	'/'       => 'Photos',
+	'/upload' => 'Upload Photo',
+	'/about'  => 'About'
 ];
 ?>
 <nav class="bg-gray-800">
