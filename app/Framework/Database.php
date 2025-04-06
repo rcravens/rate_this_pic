@@ -41,25 +41,25 @@ class Database
 		return self::$instance;
 	}
 
-	public function migrate(): void
+	public static function migrate(): void
 	{
 		$migrate_sql = file_get_contents( path()->root( "database/migrate.sql" ) );
 
 		$db = Database::instance();
 
-		$db->exec( $migrate_sql );
+		$db->raw( $migrate_sql );
 	}
 
-	public function seed(): void
+	public static function seed(): void
 	{
 		$migrate_sql = file_get_contents( path()->root( "database/seed.sql" ) );
 
 		$db = Database::instance();
 
-		$db->exec( $migrate_sql );
+		$db->raw( $migrate_sql );
 	}
 
-	public function exec( string $sql ): int
+	public function raw( string $sql ): int
 	{
 		return $this->pdo->exec( $sql );
 	}
@@ -80,5 +80,13 @@ class Database
 		$statement->execute( $params );
 
 		return $statement->fetchAll();
+	}
+
+	public function execute( string $sql, array $params = [] ): int
+	{
+		$statement = $this->pdo->prepare( $sql );
+		$statement->execute( $params );
+
+		return $statement->rowCount();
 	}
 }

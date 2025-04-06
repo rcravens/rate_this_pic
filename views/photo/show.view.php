@@ -79,7 +79,7 @@
     <section class="max-w-xl mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
         <h2 class="text-xl font-semibold mb-4 text-gray-800">Leave a Review</h2>
 
-        <form action="#" method="POST" class="space-y-4">
+        <form action="/photo?id=<?= $photo->id ?>" method="POST" class="space-y-4">
 
             <!-- Star Rating -->
             <div>

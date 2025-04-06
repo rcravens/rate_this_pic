@@ -11,7 +11,7 @@ class PhotoController
 	public function index(): View
 	{
 		$db     = Database::instance();
-		$sql    = "select * from photos";
+		$sql    = "SELECT * FROM photos";
 		$photos = $db->all( $sql );
 
 		return View::with( 'photo.index' )
@@ -31,14 +31,14 @@ class PhotoController
 
 		$db = Database::instance();
 
-		$sql   = "select * from photos where id = :id";
+		$sql   = "SELECT * FROM photos WHERE id = :id";
 		$photo = $db->first( $sql, [ 'id' => $id ] );
 		if ( is_null( $photo ) )
 		{
 			return View::with( 'error.404' );
 		}
 
-		$sql     = 'select * from reviews where photo_id = :id';
+		$sql     = 'SELECT * FROM reviews WHERE photo_id = :id';
 		$reviews = $db->all( $sql, [ 'id' => $id ] );
 
 		$summary                 = new stdClass();
@@ -60,5 +60,66 @@ class PhotoController
 			                   'summary' => $summary,
 			                   'reviews' => $reviews
 		                   ] );
+	}
+
+	public function store()
+	{
+		$photo_id = $_GET[ 'id' ] ?? null;
+		if ( is_null( $photo_id ) )
+		{
+			dd( 'TODO: redirect to home page with a flash message' );
+		}
+
+		$db    = Database::instance();
+		$sql   = "SELECT * FROM photos WHERE id = :id";
+		$photo = $db->first( $sql, [ 'id' => $photo_id ] );
+		if ( is_null( $photo ) )
+		{
+			dd( 'TODO: redirect to home page with a flash message' );
+		}
+
+		$rating  = $_POST[ 'rating' ] ?? null;          // integer from 0 to 5 inclusive
+		$name    = $_POST[ 'name' ] ?? null;            // string (nullable), max length 100
+		$comment = $_POST[ 'comment' ] ?? null;         // string (required), max length 1000
+
+		$errors = [];
+
+		if ( ! is_numeric( $rating ) || $rating < 0 || $rating > 5 )
+		{
+			$errors[ 'rating' ] = 'Please enter a valid rating.';
+		}
+		$rating = intval( $rating );
+
+		$name = htmlspecialchars( trim( $name ) );
+		if ( strlen( $name ) > 100 )
+		{
+			$errors[ 'name' ] = 'Name cannot be longer than 100 characters.';
+		}
+
+		$comment = htmlspecialchars( trim( $comment ) );
+		if ( strlen( $comment ) > 1000 )
+		{
+			$errors[ 'comment' ] = 'Comment cannot be longer than 1000 characters.';
+		}
+
+		if ( count( $errors ) > 0 )
+		{
+			dd( 'TODO: redirect back with old values and error data' );
+		}
+
+		$sql      = 'INSERT INTO reviews (photo_id, name, num_stars, comment) VALUES (:photo_id, :name, :num_stars, :comment)';
+		$db       = Database::instance();
+		$num_rows = $db->execute( $sql, [
+			'photo_id'  => $photo_id,
+			'name'      => $name,
+			'num_stars' => $rating,
+			'comment'   => $comment
+		] );
+		if ( $num_rows === 0 )
+		{
+			dd( 'TODO: redirect back to current page with error message' );
+		}
+
+		dd( 'TODO: redirect back to current page with flash message' );
 	}
 }

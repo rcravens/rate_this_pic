@@ -6,14 +6,14 @@ class Router
 {
 	private static array $routes = [];
 
-	public static function get( string $name, string $class, string $method ): void
+	public static function get( string $route, string $class, string $method ): void
 	{
-		self::add_route( 'GET', $name, $class, $method );
+		self::add_route( 'GET', $route, $class, $method );
 	}
 
-	public static function post( string $name, string $class, string $method ): void
+	public static function post( string $route, string $class, string $method ): void
 	{
-		self::add_route( 'POST', $name, $class, $method );
+		self::add_route( 'POST', $route, $class, $method );
 	}
 
 	public static function view(): View
@@ -47,12 +47,12 @@ class Router
 		return $controller->{$method}();
 	}
 
-	private static function add_route( string $verb, string $name, string $class, string $method ): void
+	private static function add_route( string $verb, string $route, string $class, string $method ): void
 	{
 		if ( ! array_key_exists( $verb, self::$routes ) )
 		{
 			self::$routes[ $verb ] = [];
 		}
-		self::$routes[ $verb ][ $name ] = [ $class, $method ];
+		self::$routes[ $verb ][ $route ] = [ $class, $method ];
 	}
 }
