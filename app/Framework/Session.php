@@ -36,6 +36,16 @@ class Session
 		return $this->is_started;
 	}
 
+	public function login( $user_id ): void
+	{
+		$_SESSION[ 'user_id' ] = $user_id;
+	}
+
+	public function logout(): void
+	{
+		session_destroy();
+	}
+
 	public function error( string $message ): static
 	{
 		return $this->create_flash( 'error', $message );
