@@ -82,6 +82,14 @@ class Database
 		return $statement->fetchAll();
 	}
 
+	public function count( string $sql, array $params = [] )
+	{
+		$statement = $this->pdo->prepare( $sql );
+		$statement->execute( $params );
+
+		return $statement->fetchColumn();
+	}
+
 	public function execute( string $sql, array $params = [] ): int
 	{
 		$statement = $this->pdo->prepare( $sql );

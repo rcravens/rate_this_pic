@@ -23,6 +23,17 @@ abstract class Model
 		return static::query()->where( 'id', '=', $id )->first();
 	}
 
+	public static function unique( string $field, mixed $value, int $excluded_id = null ): bool
+	{
+		$query = self::query()->where( $field, '=', $value );
+		if ( ! is_null( $excluded_id ) )
+		{
+			$query->where( 'id', '!=', $excluded_id );
+		}
+
+		return $query->count() === 0;
+	}
+
 	public static function insert( array $data ): int
 	{
 		$sql = 'INSERT INTO ' . static::table();
@@ -80,11 +91,22 @@ abstract class Model
 		return $db->first( $sql, $params );
 	}
 
-	private function build_query(): array
+	public function count(): int
+	{
+		[ $sql, $params ] = $this->build_query( true );
+		$db = Database::instance();
+
+		return $db->count( $sql, $params );
+	}
+
+	private function build_query( bool $is_count = false ): array
 	{
 		$params = [];
 
-		$sql = 'SELECT * FROM ' . static::table();
+		$sql = $is_count ?
+			'SELECT count(*) FROM ' . static::table() :
+			'SELECT * FROM ' . static::table();
+
 		if ( count( $this->wheres ) > 0 )
 		{
 			$where_clauses = [];
