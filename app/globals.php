@@ -1,5 +1,7 @@
 <?php
 
+use App\Framework\View;
+
 function dd( ...$vars )
 {
 	echo "<pre>";
@@ -11,25 +13,7 @@ function dd( ...$vars )
 	die();
 }
 
-function view( $name, array $args = [], $page_layout = null )
-{
-	// convention photo.index ===> views/photo/index.view.php
-	$parts = explode( '.', $name );
-	$path  = '../views/' . implode( '/', $parts ) . '.view.php';
-
-	if ( isset( $page_layout ) )
-	{
-		$args[ 'page_content' ] = file_get_contents( $path );
-
-		return view( $page_layout, $args );
-	}
-
-	extract( $args );
-
-	return require $path;
-}
-
-function load_route(): void
+function load_route()
 {
 	$routes = require "../app/routes.php";
 
@@ -39,17 +23,19 @@ function load_route(): void
 		$controller = new $class();
 		if ( method_exists( $controller, $method ) )
 		{
-			$controller->{$method}();
+			return $controller->{$method}();
 		}
 		else
 		{
 			http_response_code( 500 );
-			view( 'errors.500' );
+
+			return View::with( 'errors.500' );
 		}
 	}
 	else
 	{
 		http_response_code( 404 );
-		view( 'errors.404', [] );
+
+		return View::with( 'errors.404' );
 	}
 }

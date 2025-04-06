@@ -2,12 +2,14 @@
 
 namespace App\Http;
 
+use App\Framework\View;
+
 class UploadController
 {
-	public function index()
+	public function index(): View
 	{
-		return view( 'upload.index', [
-			'page_header' => 'Upload',
-		],           'layout.app' );
+		return View::with( 'upload.index' )
+		           ->layout( 'layout.app' )
+		           ->title( 'Upload' );
 	}
 }

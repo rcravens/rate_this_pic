@@ -5,7 +5,8 @@ require "../app/globals.php";
 
 try
 {
-	load_route();
+	$view = load_route();
+	$view->render();
 }
 catch( \Throwable $e )
 {

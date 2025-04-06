@@ -2,12 +2,14 @@
 
 namespace App\Http;
 
+use App\Framework\View;
+
 class AboutController
 {
-	public function index()
+	public function index(): View
 	{
-		return view( 'about.index', [
-			'page_header' => 'About',
-		],           'layout.app' );
+		return View::with( 'about.index' )
+		           ->layout( 'layout.app' )
+		           ->title( 'About' );
 	}
 }
