@@ -2,17 +2,16 @@
 
 namespace App\Http;
 
-use App\Framework\Database;
 use App\Framework\View;
+use App\Models\Photo;
+use App\Models\Review;
 use stdClass;
 
 class PhotoController
 {
 	public function index(): View
 	{
-		$db     = Database::instance();
-		$sql    = "SELECT * FROM photos";
-		$photos = $db->all( $sql );
+		$photos = Photo::all();
 
 		return View::with( 'photo.index' )
 		           ->title( 'Photo Browser' )
@@ -29,17 +28,13 @@ class PhotoController
 			return View::with( 'error.404' );
 		}
 
-		$db = Database::instance();
-
-		$sql   = "SELECT * FROM photos WHERE id = :id";
-		$photo = $db->first( $sql, [ 'id' => $id ] );
+		$photo = Photo::find( $id );
 		if ( is_null( $photo ) )
 		{
 			return View::with( 'error.404' );
 		}
 
-		$sql     = 'SELECT * FROM reviews WHERE photo_id = :id';
-		$reviews = $db->all( $sql, [ 'id' => $id ] );
+		$reviews = Review::query()->where( 'photo_id', '=', $id )->get();
 
 		$summary                 = new stdClass();
 		$summary->star_total     = 0;
@@ -62,18 +57,15 @@ class PhotoController
 		                   ] );
 	}
 
-	public function store()
+	public function store(): void
 	{
 		$photo_id = $_GET[ 'id' ] ?? null;
 		if ( is_null( $photo_id ) )
 		{
 			session()->error( 'Missing required parameters.' )->redirect( '/' );
-			dd( 'TODO: redirect to home page with a flash message' );
 		}
 
-		$db    = Database::instance();
-		$sql   = "SELECT * FROM photos WHERE id = :id";
-		$photo = $db->first( $sql, [ 'id' => $photo_id ] );
+		$photo = Photo::find( $photo_id );
 		if ( is_null( $photo ) )
 		{
 			session()->error( 'Photo not found.' )->redirect( '/' );
@@ -108,15 +100,13 @@ class PhotoController
 			session()->invalid( $errors )->redirect_back();
 		}
 
-		$sql      = 'INSERT INTO reviews (photo_id, name, num_stars, comment) VALUES (:photo_id, :name, :num_stars, :comment)';
-		$db       = Database::instance();
-		$num_rows = $db->execute( $sql, [
+		$data = [
 			'photo_id'  => $photo_id,
 			'name'      => $name,
 			'num_stars' => $rating,
 			'comment'   => $comment
-		] );
-		if ( $num_rows === 0 )
+		];
+		if ( Review::insert( $data ) === 0 )
 		{
 			session()->error( 'Oops! Something went wrong adding record to the DB.' )
 			         ->redirect_back();
