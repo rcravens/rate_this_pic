@@ -39,22 +39,43 @@ class View
 		return $this;
 	}
 
-	public function render()
+	public function render(): void
 	{
 		$view_path = $this->get_path( $this->view );
 
 		if ( ! is_null( $this->layout ) )
 		{
-			$this->data[ '_page_content' ] = file_get_contents( $view_path );
+			$this->data[ '_page_content' ] = $this->render_template( $view_path, $this->data );
 
-			return View::with( $this->layout )
-			           ->data( $this->data )
-			           ->render();
+			View::with( $this->layout )
+			    ->data( $this->data )
+			    ->render();
+
+			return;
 		}
 
-		extract( $this->data );
+		$html = $this->render_template( $view_path, $this->data );
 
-		return require $view_path;
+		echo $html;
+	}
+
+	private function render_template( string $view_path, array $data ): string
+	{
+		$template = file_get_contents( $view_path );
+
+		extract( $data );
+
+		// Start output buffering
+		//
+		ob_start();
+
+		// Evaluate PHP inside the template
+		//
+		eval( '?>' . $template );
+
+		// Capture and return the output buffer as a string
+		//
+		return ob_get_clean();
 	}
 
 	private function get_path( $short_notation )

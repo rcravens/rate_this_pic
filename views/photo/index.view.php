@@ -1,7 +1,7 @@
 <div class="mx-auto max-w-xl px-4 py-6 sm:px-6 lg:px-8">
     <!-- Photo -->
     <div class="">
-        <img class="w-full" alt="photo" src="https://picsum.photos/id/237/400/300"/>
+        <img class="w-full" alt="photo" src="<?= $photo->url ?>"/>
     </div>
 
     <!-- Summary -->
