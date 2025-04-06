@@ -20,6 +20,11 @@ abstract class Model
 
 	public static function find( $id )
 	{
+		if ( is_null( $id ) )
+		{
+			return null;
+		}
+
 		return static::query()->where( 'id', '=', $id )->first();
 	}
 
@@ -32,6 +37,19 @@ abstract class Model
 		}
 
 		return $query->count() === 0;
+	}
+
+	public static function delete( $id ): bool
+	{
+		if ( is_null( $id ) )
+		{
+			return false;
+		}
+		$sql  = 'DELETE FROM ' . static::table() . ' WHERE id = :id';
+		$data = [ 'id' => $id ];
+		$db   = Database::instance();
+
+		return $db->execute( $sql, $data );
 	}
 
 	public static function insert( array $data ): int

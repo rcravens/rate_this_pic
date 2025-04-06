@@ -3,11 +3,14 @@ use App\Http\AboutController;
 use App\Http\AuthenticationController;
 use App\Http\PhotoController;
 use App\Http\RegisterController;
+use App\Http\ReviewController;
 use App\Http\UploadController;
 
 Router::get( '/', PhotoController::class, "index" );
 Router::get( '/photo', PhotoController::class, "show" );
-Router::post( '/photo', PhotoController::class, "store" );
+Router::delete( '/photo', PhotoController::class, "destroy" );
+
+Router::post( '/photo/review', ReviewController::class, "store" );
 
 Router::get( '/upload', UploadController::class, "index" );
 Router::post( '/upload', UploadController::class, "store" );

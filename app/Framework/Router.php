@@ -16,6 +16,11 @@ class Router
 		self::add_route( 'POST', $route, $class, $method );
 	}
 
+	public static function delete( string $route, string $class, string $method ): void
+	{
+		self::add_route( 'DELETE', $route, $class, $method );
+	}
+
 	public static function current_route(): string
 	{
 		return $_SERVER[ 'REQUEST_URI' ];
@@ -23,8 +28,10 @@ class Router
 
 	public static function view(): View
 	{
-		$method = $_SERVER[ "REQUEST_METHOD" ];
-		$route  = parse_url( $_SERVER[ "REQUEST_URI" ], PHP_URL_PATH );
+		$method = $_POST[ '_METHOD' ] ?? $_SERVER[ "REQUEST_METHOD" ];
+		$method = strtoupper( $method );
+
+		$route = parse_url( $_SERVER[ "REQUEST_URI" ], PHP_URL_PATH );
 
 		if ( ! array_key_exists( $method, self::$routes ) )
 		{

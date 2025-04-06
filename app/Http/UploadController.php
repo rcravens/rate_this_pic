@@ -29,11 +29,7 @@ class UploadController
 			session()->invalid( $errors )->redirect_back();
 		}
 
-		$photo_directory = path()->root( 'public/photos' );
-		if ( ! file_exists( $photo_directory ) )
-		{
-			mkdir( $photo_directory, 0777, true );
-		}
+		$photo_directory = Photo::directory();
 
 		$extension   = strtolower( pathinfo( $_FILES[ 'photo' ][ 'name' ], PATHINFO_EXTENSION ) );
 		$filename    = uniqid( 'photo_', true ) . '.' . $extension;
@@ -45,7 +41,7 @@ class UploadController
 
 		$data = [
 			'user_id' => $user->id,
-			'url'     => '/photos/' . $filename
+			'url'     => $filename
 		];
 		if ( Photo::insert( $data ) === 0 )
 		{

@@ -57,43 +57,36 @@ class PhotoController
 		                   ] );
 	}
 
-	public function store(): void
+	public function destroy(): void
 	{
-		$photo_id = $_GET[ 'id' ] ?? null;
-		if ( is_null( $photo_id ) )
+		$user = session()->user();
+		if ( is_null( $user ) )
 		{
-			session()->error( 'Missing required parameters.' )->redirect( '/' );
+			session()->error( 'You must be logged in to delete photos.' );
 		}
 
-		$photo = Photo::find( $photo_id );
+		$photo = Photo::find( $_GET[ 'id' ] );
 		if ( is_null( $photo ) )
 		{
 			session()->error( 'Photo not found.' )->redirect( '/' );
 		}
 
-		$rating  = validate( 'rating' )->integer()->min( 0 )->max( 5 )->required();
-		$name    = validate( 'name' )->string()->max( 100 );
-		$comment = validate( 'comment' )->string()->max( 1000 );
-
-		$errors = array_merge( $rating->errors(), $name->errors(), $comment->errors() );
-		if ( count( $errors ) > 0 )
+		if ( $photo->user_id != $user->id )
 		{
-			session()->invalid( $errors )->redirect_back();
+			session()->error( 'You do not have permission to delete this photo.' );
 		}
 
-		$data = [
-			'photo_id'  => $photo_id,
-			'name'      => $name->value(),
-			'num_stars' => $rating->value(),
-			'comment'   => $comment->value(),
-		];
-		if ( Review::insert( $data ) === 0 )
+		$photo_path = Photo::convert_to_path( $photo->url );
+		if ( file_exists( $photo_path ) )
 		{
-			session()->error( 'Oops! Something went wrong adding record to the DB.' )
-			         ->redirect_back();
+			unlink( $photo_path );
 		}
 
-		session()->success( 'Review has been created.' )
-		         ->redirect_back();
+		if ( ! Photo::delete( $photo->id ) )
+		{
+			session()->error( 'Unable to delete photo.' )->redirect_back();
+		}
+
+		session()->success( 'Photo deleted successfully.' )->redirect( '/' );
 	}
 }

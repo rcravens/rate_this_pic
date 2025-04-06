@@ -1,85 +1,94 @@
 <div class="mx-auto max-w-xl px-4 py-6 sm:px-6 lg:px-8">
+	<?php $user = session()->user(); ?>
     <!-- Photo -->
-    <div class="">
+    <div class="flex flex-col items-center gap-y-6">
         <img class="w-full" alt="photo" src="<?= $photo->url ?>"/>
+		<?php if ( ! is_null( $user ) && $photo->user_id == $user->id ): ?>
+            <form action="/photo?id=<?= $photo->id ?>" method="POST">
+                <input type="hidden" name="_METHOD" value="DELETE"/>
+                <button type="submit" class="bg-red-400 hover:bg-red-500 text-white font-semibold px-4 py-2 rounded-md shadow">Delete Photo & Reviews</button>
+            </form>
+		<?php endif; ?>
     </div>
 
-    <!-- Summary -->
-    <section class="max-w-xl mx-auto mt-6 p-4 bg-white shadow-md rounded-lg">
-        <h2 class="text-xl font-semibold mb-4 text-gray-800">Photo Summary</h2>
+	<?php if ( count( $reviews ) > 0 ): ?>
+        <!-- Summary -->
+        <section class="max-w-xl mx-auto mt-6 p-4 bg-white shadow-md rounded-lg">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">Photo Summary</h2>
 
-        <div class="flex items-center space-x-4 mb-2">
-            <!-- Visual Stars -->
-            <div class="flex items-center text-yellow-400">
-                <!-- Repeat filled or empty stars dynamically -->
-                <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20">
-                    <path d="M10 15l-5.878 3.09 1.122-6.545L1 6.91l6.561-.954L10 0l2.439 5.956L19 6.91l-4.244 4.635 1.122 6.545z"/>
-                </svg>
-                <!-- Repeat for average, or dynamically render -->
-                <span class="ml-2 text-gray-700 font-medium"><?= number_format( $summary->avg_star_rating, 1 ) ?> / 5</span>
-            </div>
-
-            <!-- Total Ratings -->
-            <div class="text-gray-600">
-                <span class="font-medium"><?= count( $reviews ) ?></span> Ratings
-            </div>
-
-            <!-- Total Comments -->
-            <div class="text-gray-600">
-                <span class="font-medium"><?= $summary->total_comments ?></span> Comments
-            </div>
-        </div>
-
-        <!-- Optional: Star Breakdown -->
-        <div class="mt-4 space-y-1">
-			<?php for ( $i = 5; $i >= 0; $i -- ): ?>
-				<?php
-				$count       = $summary->star_counts[ $i ];
-				$total_count = count( $reviews );
-				$percent     = $total_count == 0 ? 0 : 100 * $count / $total_count;
-				?>
-                <div class="flex items-center">
-                    <span class="w-12 text-sm text-gray-600"><?= $i ?>★</span>
-                    <div class="flex-1 bg-gray-100 h-2 rounded">
-                        <div class="bg-yellow-400 h-2 rounded" style="width: <?= $percent ?>%;"></div>
-                    </div>
-                    <span class="ml-2 text-sm text-gray-600"><?= $summary->star_counts[ $i ] ?></span>
+            <div class="flex items-center space-x-4 mb-2">
+                <!-- Visual Stars -->
+                <div class="flex items-center text-yellow-400">
+                    <!-- Repeat filled or empty stars dynamically -->
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20">
+                        <path d="M10 15l-5.878 3.09 1.122-6.545L1 6.91l6.561-.954L10 0l2.439 5.956L19 6.91l-4.244 4.635 1.122 6.545z"/>
+                    </svg>
+                    <!-- Repeat for average, or dynamically render -->
+                    <span class="ml-2 text-gray-700 font-medium"><?= number_format( $summary->avg_star_rating, 1 ) ?> / 5</span>
                 </div>
-			<?php endfor; ?>
-        </div>
-    </section>
 
-    <section class="max-w-xl mx-auto mt-8 p-4 bg-white shadow-md rounded-lg">
-        <h2 class="text-xl font-semibold mb-4 text-gray-800">Recent Reviews</h2>
+                <!-- Total Ratings -->
+                <div class="text-gray-600">
+                    <span class="font-medium"><?= count( $reviews ) ?></span> Ratings
+                </div>
 
-        <div class="space-y-6">
-			<?php foreach ( $reviews as $review ): ?>
-                <div class="border-b pb-4">
-                    <div class="flex items-center justify-between mb-1">
-                        <div class="flex items-center">
-							<?php for ( $i = 1; $i <= $review->num_stars; $i ++ ): ?>
-                                <svg class="w-4 h-4 fill-current text-yellow-400" viewBox="0 0 20 20">
-                                    <path d="M10 15l-5.878 3.09 1.122-6.545L1 6.91l6.561-.954L10 0l2.439 5.956L19 6.91l-4.244 4.635 1.122 6.545z"/>
-                                </svg>
-							<?php endfor; ?>
-							<?php for ( $i = $review->num_stars + 1; $i <= 5; $i ++ ): ?>
-                                <svg class="w-4 h-4 fill-current text-gray-300" viewBox="0 0 20 20">
-                                    <path d="M10 15l-5.878 3.09 1.122-6.545L1 6.91l6.561-.954L10 0l2.439 5.956L19 6.91l-4.244 4.635 1.122 6.545z"/>
-                                </svg>
-							<?php endfor; ?>
+                <!-- Total Comments -->
+                <div class="text-gray-600">
+                    <span class="font-medium"><?= $summary->total_comments ?></span> Comments
+                </div>
+            </div>
+
+            <!-- Optional: Star Breakdown -->
+            <div class="mt-4 space-y-1">
+				<?php for ( $i = 5; $i >= 0; $i -- ): ?>
+					<?php
+					$count       = $summary->star_counts[ $i ];
+					$total_count = count( $reviews );
+					$percent     = $total_count == 0 ? 0 : 100 * $count / $total_count;
+					?>
+                    <div class="flex items-center">
+                        <span class="w-12 text-sm text-gray-600"><?= $i ?>★</span>
+                        <div class="flex-1 bg-gray-100 h-2 rounded">
+                            <div class="bg-yellow-400 h-2 rounded" style="width: <?= $percent ?>%;"></div>
                         </div>
+                        <span class="ml-2 text-sm text-gray-600"><?= $summary->star_counts[ $i ] ?></span>
                     </div>
-                    <p class="text-gray-700"><?= $review->comment ?></p>
-                    <div class="mt-1 text-sm text-gray-500">— <?= is_null( $review->name ) || strlen( trim( $review->name ) ) === 0 ? 'Anonymous' : $review->name ?></div>
-                </div>
-			<?php endforeach; ?>
-        </div>
-    </section>
+				<?php endfor; ?>
+            </div>
+        </section>
+
+        <section class="max-w-xl mx-auto mt-8 p-4 bg-white shadow-md rounded-lg">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">Recent Reviews</h2>
+
+            <div class="space-y-6">
+				<?php foreach ( $reviews as $review ): ?>
+                    <div class="border-b pb-4">
+                        <div class="flex items-center justify-between mb-1">
+                            <div class="flex items-center">
+								<?php for ( $i = 1; $i <= $review->num_stars; $i ++ ): ?>
+                                    <svg class="w-4 h-4 fill-current text-yellow-400" viewBox="0 0 20 20">
+                                        <path d="M10 15l-5.878 3.09 1.122-6.545L1 6.91l6.561-.954L10 0l2.439 5.956L19 6.91l-4.244 4.635 1.122 6.545z"/>
+                                    </svg>
+								<?php endfor; ?>
+								<?php for ( $i = $review->num_stars + 1; $i <= 5; $i ++ ): ?>
+                                    <svg class="w-4 h-4 fill-current text-gray-300" viewBox="0 0 20 20">
+                                        <path d="M10 15l-5.878 3.09 1.122-6.545L1 6.91l6.561-.954L10 0l2.439 5.956L19 6.91l-4.244 4.635 1.122 6.545z"/>
+                                    </svg>
+								<?php endfor; ?>
+                            </div>
+                        </div>
+                        <p class="text-gray-700"><?= $review->comment ?></p>
+                        <div class="mt-1 text-sm text-gray-500">— <?= is_null( $review->name ) || strlen( trim( $review->name ) ) === 0 ? 'Anonymous' : $review->name ?></div>
+                    </div>
+				<?php endforeach; ?>
+            </div>
+        </section>
+	<?php endif; ?>
 
     <section class="max-w-xl mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
         <h2 class="text-xl font-semibold mb-4 text-gray-800">Leave a Review</h2>
 
-        <form action="/photo?id=<?= $photo->id ?>" method="POST" class="space-y-4">
+        <form action="/photo/review?id=<?= $photo->id ?>" method="POST" class="space-y-4">
 
             <!-- Star Rating -->
             <div>
