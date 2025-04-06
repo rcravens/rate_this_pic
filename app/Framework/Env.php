@@ -8,7 +8,7 @@ class Env
 {
 	private static array $vars = [];
 
-	public static function load( string $env_file = ROOT_PATH . '.env' ): void
+	public static function load( string $env_file ): void
 	{
 		if ( ! file_exists( $env_file ) )
 		{

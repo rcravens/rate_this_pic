@@ -43,7 +43,7 @@ class Database
 
 	public function migrate(): void
 	{
-		$migrate_sql = file_get_contents( ROOT_PATH . "database/migrate.sql" );
+		$migrate_sql = file_get_contents( path()->root( "database/migrate.sql" ) );
 
 		$db = Database::instance();
 
@@ -52,7 +52,7 @@ class Database
 
 	public function seed(): void
 	{
-		$migrate_sql = file_get_contents( ROOT_PATH . "database/seed.sql" );
+		$migrate_sql = file_get_contents( path()->root( "database/seed.sql" ) );
 
 		$db = Database::instance();
 

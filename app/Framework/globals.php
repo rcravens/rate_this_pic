@@ -1,5 +1,7 @@
 <?php
 
+use App\Framework\Path;
+
 function dd( ...$vars )
 {
 	echo "<pre>";
@@ -11,9 +13,14 @@ function dd( ...$vars )
 	die();
 }
 
+function path(): Path
+{
+	return Path::instance();
+}
+
 function config( $short_hand )
 {
-	$config = require "config.php";
+	$config = path()->require_app( 'config.php' );
 	$parts  = explode( '.', $short_hand );
 	foreach ( $parts as $part )
 	{
