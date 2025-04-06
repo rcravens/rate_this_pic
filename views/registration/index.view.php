@@ -6,21 +6,33 @@
             <div>
                 <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
                 <input type="text" name="name" id="name" required class="mt-1 w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-yellow-200"/>
+				<?php if ( $error = session()->validation_message( 'name' ) ): ?>
+                    <p class="mt-1 text-sm text-red-600"><?= $error ?></p>
+				<?php endif; ?>
             </div>
 
             <div>
                 <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
                 <input type="email" name="email" id="email" required class="mt-1 w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-yellow-200"/>
+				<?php if ( $error = session()->validation_message( 'email' ) ): ?>
+                    <p class="mt-1 text-sm text-red-600"><?= $error ?></p>
+				<?php endif; ?>
             </div>
 
             <div>
                 <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                 <input type="password" name="password" id="password" required class="mt-1 w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-yellow-200"/>
+				<?php if ( $error = session()->validation_message( 'password' ) ): ?>
+                    <p class="mt-1 text-sm text-red-600"><?= $error ?></p>
+				<?php endif; ?>
             </div>
 
             <div>
                 <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirm Password</label>
                 <input type="password" name="password_confirmation" id="password_confirmation" required class="mt-1 w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-yellow-200"/>
+				<?php if ( $error = session()->validation_message( 'password_confirmation' ) ): ?>
+                    <p class="mt-1 text-sm text-red-600"><?= $error ?></p>
+				<?php endif; ?>
             </div>
 
             <div>

@@ -2,6 +2,7 @@
 /.phpunit.cache
 /node_modules
 /vendor
+/public/photos
 .env
 .env.backup
 .phpactor.json

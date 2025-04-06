@@ -10,6 +10,7 @@ Router::get( '/photo', PhotoController::class, "show" );
 Router::post( '/photo', PhotoController::class, "store" );
 
 Router::get( '/upload', UploadController::class, "index" );
+Router::post( '/upload', UploadController::class, "store" );
 
 Router::get( '/about', AboutController::class, "index" );
 
