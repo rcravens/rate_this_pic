@@ -86,49 +86,60 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Rating</label>
                 <div class="flex flex-row-reverse justify-end gap-1">
                     <!-- 5 to 1 radio buttons -->
-                    <input type="radio" name="rating" id="star5" value="5" class="peer hidden" required>
+                    <input type="hidden" name="rating" value="0"/>
+					<?php $old_rating = session()->old( 'rating', 0 ); ?>
+                    <input type="radio" name="rating" id="star5" value="5" <?= $old_rating == 5 ? 'checked' : '' ?> class="peer hidden">
                     <label for="star5" class="cursor-pointer text-gray-300 peer-checked:text-yellow-400 hover:text-yellow-500 transition">
                         <svg class="w-6 h-6 fill-current" viewBox="0 0 20 20">
                             <path d="M10 15l-5.878 3.09 1.122-6.545L1 6.91l6.561-.954L10 0l2.439 5.956L19 6.91l-4.244 4.635 1.122 6.545z"/>
                         </svg>
                     </label>
-                    <input type="radio" name="rating" id="star4" value="4" class="peer hidden" required>
+                    <input type="radio" name="rating" id="star4" value="4" class="peer hidden">
                     <label for="star4" class="cursor-pointer text-gray-300 peer-checked:text-yellow-400 hover:text-yellow-500 transition">
                         <svg class="w-6 h-6 fill-current" viewBox="0 0 20 20">
                             <path d="M10 15l-5.878 3.09 1.122-6.545L1 6.91l6.561-.954L10 0l2.439 5.956L19 6.91l-4.244 4.635 1.122 6.545z"/>
                         </svg>
                     </label>
-                    <input type="radio" name="rating" id="star3" value="3" class="peer hidden" required>
+                    <input type="radio" name="rating" id="star3" value="3" class="peer hidden">
                     <label for="star3" class="cursor-pointer text-gray-300 peer-checked:text-yellow-400 hover:text-yellow-500 transition">
                         <svg class="w-6 h-6 fill-current" viewBox="0 0 20 20">
                             <path d="M10 15l-5.878 3.09 1.122-6.545L1 6.91l6.561-.954L10 0l2.439 5.956L19 6.91l-4.244 4.635 1.122 6.545z"/>
                         </svg>
                     </label>
-                    <input type="radio" name="rating" id="star2" value="2" class="peer hidden" required>
+                    <input type="radio" name="rating" id="star2" value="2" class="peer hidden">
                     <label for="star2" class="cursor-pointer text-gray-300 peer-checked:text-yellow-400 hover:text-yellow-500 transition">
                         <svg class="w-6 h-6 fill-current" viewBox="0 0 20 20">
                             <path d="M10 15l-5.878 3.09 1.122-6.545L1 6.91l6.561-.954L10 0l2.439 5.956L19 6.91l-4.244 4.635 1.122 6.545z"/>
                         </svg>
                     </label>
-                    <input type="radio" name="rating" id="star1" value="1" class="peer hidden" required>
+                    <input type="radio" name="rating" id="star1" value="1" class="peer hidden">
                     <label for="star1" class="cursor-pointer text-gray-300 peer-checked:text-yellow-400 hover:text-yellow-500 transition">
                         <svg class="w-6 h-6 fill-current" viewBox="0 0 20 20">
                             <path d="M10 15l-5.878 3.09 1.122-6.545L1 6.91l6.561-.954L10 0l2.439 5.956L19 6.91l-4.244 4.635 1.122 6.545z"/>
                         </svg>
                     </label>
                 </div>
+				<?php if ( $error = session()->validation_message( 'rating' ) ): ?>
+                    <p class="mt-1 text-sm text-red-600"><?= $error ?></p>
+				<?php endif; ?>
             </div>
 
             <!-- Name Field (optional) -->
             <div>
                 <label for="name" class="block text-sm font-medium text-gray-700">Name <span class="text-gray-400 text-xs">(optional)</span></label>
-                <input type="text" name="name" id="name" class="mt-1 w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-yellow-200" maxlength="100">
+                <input type="text" name="name" id="name" class="mt-1 w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-yellow-200" maxlength="100" value="<?= session()->old( 'name' ) ?>">
+				<?php if ( $error = session()->validation_message( 'name' ) ): ?>
+                    <p class="mt-1 text-sm text-red-600"><?= $error ?></p>
+				<?php endif; ?>
             </div>
 
             <!-- Comment Field -->
             <div>
                 <label for="comment" class="block text-sm font-medium text-gray-700">Comment</label>
-                <textarea name="comment" id="comment" rows="4" class="mt-1 w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-yellow-200" required></textarea>
+                <textarea name="comment" id="comment" rows="4" class="mt-1 w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-yellow-200"><?= session()->old( 'comment' ) ?></textarea>
+				<?php if ( $error = session()->validation_message( 'comment' ) ): ?>
+                    <p class="mt-1 text-sm text-red-600"><?= $error ?></p>
+				<?php endif; ?>
             </div>
 
             <!-- Submit Button -->

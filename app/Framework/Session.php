@@ -6,7 +6,9 @@ class Session
 {
 	private static ?self $instance   = null;
 	private bool         $is_started = false;
+	private array        $flash      = [];
 	private array        $old        = [];
+	private array        $errors     = [];
 
 	public static function instance(): self
 	{
@@ -36,17 +38,26 @@ class Session
 
 	public function error( string $message ): static
 	{
-		return $this->flash( 'error', $message );
+		return $this->create_flash( 'error', $message );
 	}
 
 	public function success( string $message ): static
 	{
-		return $this->flash( 'success', $message );
+		return $this->create_flash( 'success', $message );
 	}
 
 	public function info( string $message ): static
 	{
-		return $this->flash( 'info', $message );
+		return $this->create_flash( 'info', $message );
+	}
+
+	public function invalid( array $errors ): static
+	{
+		$_SESSION[ 'old' ] = $_POST;
+
+		$_SESSION[ 'errors' ] = $errors;
+
+		return $this;
 	}
 
 	public function redirect( string $route )
@@ -55,12 +66,36 @@ class Session
 		exit;
 	}
 
-	public function old( $key ): ?string
+	public function redirect_back()
 	{
-		return $this->old[ $key ] ?? null;
+		$this->redirect( Router::current_route() );
 	}
 
-	private function flash( string $type, string $message ): static
+	public function old( $key, $default = null )
+	{
+		$val = $this->old[ $key ] ?? $default;
+
+		return htmlspecialchars( $val );
+	}
+
+	public function validation_message( $key ): ?string
+	{
+		return $this->errors[ $key ] ?? null;
+	}
+
+	public function flash(): ?string
+	{
+		$msg = $this->flash[ 'flash_message' ] ?? null;
+
+		return htmlspecialchars( $msg );
+	}
+
+	public function flash_type(): ?string
+	{
+		return $this->flash[ 'flash_type' ] ?? null;
+	}
+
+	private function create_flash( string $type, string $message ): static
 	{
 		$_SESSION[ 'flash_type' ]    = $type;
 		$_SESSION[ 'flash_message' ] = $message;
@@ -70,14 +105,25 @@ class Session
 
 	private function delete_transient_data(): void
 	{
-		$single_request_keys = [ 'flash_message', 'flash_type' ];
-		foreach ( $single_request_keys as $key )
+		$flash_keys = [ 'flash_message', 'flash_type' ];
+		foreach ( $flash_keys as $key )
 		{
 			if ( isset( $_SESSION[ $key ] ) )
 			{
-				$this->old[ $key ] = $_SESSION[ $key ];
+				$this->flash[ $key ] = $_SESSION[ $key ];
 				unset( $_SESSION[ $key ] );
 			}
+		}
+
+		if ( isset( $_SESSION[ 'old' ] ) )
+		{
+			$this->old = $_SESSION[ 'old' ];
+			unset( $_SESSION[ 'old' ] );
+		}
+		if ( isset( $_SESSION[ 'errors' ] ) )
+		{
+			$this->errors = $_SESSION[ 'errors' ];
+			unset( $_SESSION[ 'errors' ] );
 		}
 	}
 }

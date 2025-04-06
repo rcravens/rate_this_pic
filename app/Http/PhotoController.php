@@ -3,7 +3,6 @@
 namespace App\Http;
 
 use App\Framework\Database;
-use App\Framework\Router;
 use App\Framework\View;
 use stdClass;
 
@@ -82,7 +81,7 @@ class PhotoController
 
 		$rating  = $_POST[ 'rating' ] ?? null;          // integer from 0 to 5 inclusive
 		$name    = $_POST[ 'name' ] ?? null;            // string (nullable), max length 100
-		$comment = $_POST[ 'comment' ] ?? null;         // string (required), max length 1000
+		$comment = $_POST[ 'comment' ] ?? null;         // string (nullable), max length 1000
 
 		$errors = [];
 
@@ -106,7 +105,7 @@ class PhotoController
 
 		if ( count( $errors ) > 0 )
 		{
-			dd( 'TODO: redirect back with old values and error data' );
+			session()->invalid( $errors )->redirect_back();
 		}
 
 		$sql      = 'INSERT INTO reviews (photo_id, name, num_stars, comment) VALUES (:photo_id, :name, :num_stars, :comment)';
@@ -120,10 +119,10 @@ class PhotoController
 		if ( $num_rows === 0 )
 		{
 			session()->error( 'Oops! Something went wrong adding record to the DB.' )
-			         ->redirect( Router::current_route() );
+			         ->redirect_back();
 		}
 
 		session()->success( 'Review has been created.' )
-		         ->redirect( Router::current_route() );
+		         ->redirect_back();
 	}
 }

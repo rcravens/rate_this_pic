@@ -1,4 +1,4 @@
-<?php if ( session()->old( 'flash_message' ) ): ?>
+<?php if ( session()->flash() ): ?>
     <style>
         [x-cloak] {
             display: none;
@@ -26,7 +26,7 @@
         <div
                 class="relative bg-white rounded-lg shadow-lg max-w-md w-full mx-4 p-6 border-l-4
             <?php
-				echo match ( session()->old( 'flash_type' ) )
+				echo match ( session()->flash_type() )
 				{
 					'success' => 'border-green-500',
 					'error' => 'border-red-500',
@@ -45,7 +45,7 @@
 
             <!-- Message -->
             <div class="text-gray-800">
-				<?= htmlspecialchars( session()->old( 'flash_message' ) ) ?>
+				<?= htmlspecialchars( session()->flash() ) ?>
             </div>
         </div>
     </div>
