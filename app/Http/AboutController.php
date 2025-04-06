@@ -9,7 +9,6 @@ class AboutController
 	public function index(): View
 	{
 		return View::with( 'about.index' )
-		           ->layout( 'layout.app' )
 		           ->title( 'About' );
 	}
 }

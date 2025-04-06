@@ -9,15 +9,25 @@ class PhotoController
 {
 	public function index(): View
 	{
+		$id = $_GET[ 'id' ] ?? null;
+		if ( is_null( $id ) )
+		{
+			return View::with( 'errors.404' );
+		}
+
 		$db = Database::instance();
 
 		$sql    = "select * from photos where id = :id";
-		$params = [ 'id' => 1 ];
+		$params = [ 'id' => $id ];
 
 		$photo = $db->first( $sql, $params );
 
+		if ( is_null( $photo ) )
+		{
+			return View::with( 'errors.404' );
+		}
+
 		return View::with( 'photo.index' )
-		           ->layout( 'layout.app' )
 		           ->title( 'Rate This Pic' )
 		           ->data( [
 			                   'photo' => $photo

@@ -5,7 +5,7 @@ namespace App\Framework;
 class View
 {
 	private string  $view;
-	private ?string $layout = null;
+	private ?string $layout = 'layout.app';
 	private array   $data   = [];
 
 	public function __construct( $view )
@@ -43,7 +43,7 @@ class View
 	{
 		$view_path = $this->get_path( $this->view );
 
-		if ( ! is_null( $this->layout ) )
+		if ( ! is_null( $this->layout ) && $this->view != $this->layout )
 		{
 			$this->data[ '_page_content' ] = $this->render_template( $view_path, $this->data );
 
