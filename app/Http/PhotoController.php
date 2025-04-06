@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Framework\Database;
+use App\Framework\Router;
 use App\Framework\View;
 use stdClass;
 
@@ -67,6 +68,7 @@ class PhotoController
 		$photo_id = $_GET[ 'id' ] ?? null;
 		if ( is_null( $photo_id ) )
 		{
+			session()->error( 'Missing required parameters.' )->redirect( '/' );
 			dd( 'TODO: redirect to home page with a flash message' );
 		}
 
@@ -75,7 +77,7 @@ class PhotoController
 		$photo = $db->first( $sql, [ 'id' => $photo_id ] );
 		if ( is_null( $photo ) )
 		{
-			dd( 'TODO: redirect to home page with a flash message' );
+			session()->error( 'Photo not found.' )->redirect( '/' );
 		}
 
 		$rating  = $_POST[ 'rating' ] ?? null;          // integer from 0 to 5 inclusive
@@ -117,9 +119,11 @@ class PhotoController
 		] );
 		if ( $num_rows === 0 )
 		{
-			dd( 'TODO: redirect back to current page with error message' );
+			session()->error( 'Oops! Something went wrong adding record to the DB.' )
+			         ->redirect( Router::current_route() );
 		}
 
-		dd( 'TODO: redirect back to current page with flash message' );
+		session()->success( 'Review has been created.' )
+		         ->redirect( Router::current_route() );
 	}
 }

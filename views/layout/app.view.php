@@ -6,4 +6,5 @@
 	<?= $_page_content ?>
 <?php endif; ?>
 
+<?php path()->require_root( "/views/layout/_flash.view.php" ) ?>
 <?php path()->require_root( "/views/layout/_page_foot.view.php" ) ?>

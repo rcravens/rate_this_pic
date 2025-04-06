@@ -22,6 +22,10 @@ class App
 		//
 		require "globals.php";
 
+		// Start the PHP session
+		//
+		session()->start();
+
 		// Load the routes
 		//
 		path()->require_app( "routes.php" );

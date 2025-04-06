@@ -1,6 +1,7 @@
 <?php
 
 use App\Framework\Path;
+use App\Framework\Session;
 
 function dd( ...$vars )
 {
@@ -16,6 +17,11 @@ function dd( ...$vars )
 function path(): Path
 {
 	return Path::instance();
+}
+
+function session(): Session
+{
+	return Session::instance();
 }
 
 function config( $short_hand )

@@ -16,6 +16,11 @@ class Router
 		self::add_route( 'POST', $route, $class, $method );
 	}
 
+	public static function current_route(): string
+	{
+		return $_SERVER[ 'REQUEST_URI' ];
+	}
+
 	public static function view(): View
 	{
 		$method = $_SERVER[ "REQUEST_METHOD" ];
