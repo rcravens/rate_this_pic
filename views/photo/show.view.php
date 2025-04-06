@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <p class="text-gray-700"><?= $review->comment ?></p>
-                    <div class="mt-1 text-sm text-gray-500">— <?= is_null( $review->name ) ? 'Anonymous' : $review->name ?></div>
+                    <div class="mt-1 text-sm text-gray-500">— <?= is_null( $review->name ) || strlen( trim( $review->name ) ) === 0 ? 'Anonymous' : $review->name ?></div>
                 </div>
 			<?php endforeach; ?>
         </div>

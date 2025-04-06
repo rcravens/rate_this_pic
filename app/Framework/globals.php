@@ -2,6 +2,7 @@
 
 use App\Framework\Path;
 use App\Framework\Session;
+use App\Framework\Validation;
 
 function dd( ...$vars )
 {
@@ -22,6 +23,11 @@ function path(): Path
 function session(): Session
 {
 	return Session::instance();
+}
+
+function validate( string $name ): Validation
+{
+	return new Validation( $name );
 }
 
 function config( $short_hand )

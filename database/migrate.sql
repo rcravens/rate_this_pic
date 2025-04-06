@@ -33,7 +33,7 @@ CREATE TABLE reviews
     id        INT AUTO_INCREMENT PRIMARY KEY,
     photo_id  INT              NOT NULL,
     name      VARCHAR(100),
-    num_stars TINYINT UNSIGNED NOT NULL CHECK (num_stars BETWEEN 1 AND 5),
+    num_stars TINYINT UNSIGNED NOT NULL CHECK (num_stars BETWEEN 0 AND 5),
     comment   TEXT,
     FOREIGN KEY (photo_id) REFERENCES photos (id) ON DELETE CASCADE
 );

@@ -71,30 +71,11 @@ class PhotoController
 			session()->error( 'Photo not found.' )->redirect( '/' );
 		}
 
-		$rating  = $_POST[ 'rating' ] ?? null;          // integer from 0 to 5 inclusive
-		$name    = $_POST[ 'name' ] ?? null;            // string (nullable), max length 100
-		$comment = $_POST[ 'comment' ] ?? null;         // string (nullable), max length 1000
+		$rating  = validate( 'rating' )->integer()->min( 0 )->max( 5 )->required();
+		$name    = validate( 'name' )->string()->max( 100 );
+		$comment = validate( 'comment' )->string()->max( 1000 );
 
-		$errors = [];
-
-		if ( ! is_numeric( $rating ) || $rating < 0 || $rating > 5 )
-		{
-			$errors[ 'rating' ] = 'Please enter a valid rating.';
-		}
-		$rating = intval( $rating );
-
-		$name = htmlspecialchars( trim( $name ) );
-		if ( strlen( $name ) > 100 )
-		{
-			$errors[ 'name' ] = 'Name cannot be longer than 100 characters.';
-		}
-
-		$comment = htmlspecialchars( trim( $comment ) );
-		if ( strlen( $comment ) > 1000 )
-		{
-			$errors[ 'comment' ] = 'Comment cannot be longer than 1000 characters.';
-		}
-
+		$errors = array_merge( $rating->errors(), $name->errors(), $comment->errors() );
 		if ( count( $errors ) > 0 )
 		{
 			session()->invalid( $errors )->redirect_back();
@@ -102,9 +83,9 @@ class PhotoController
 
 		$data = [
 			'photo_id'  => $photo_id,
-			'name'      => $name,
-			'num_stars' => $rating,
-			'comment'   => $comment
+			'name'      => $name->value(),
+			'num_stars' => $rating->value(),
+			'comment'   => $comment->value(),
 		];
 		if ( Review::insert( $data ) === 0 )
 		{
