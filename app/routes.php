@@ -1,9 +1,8 @@
-<?php use App\Http\AboutController;
+<?php use App\Framework\Router;
+use App\Http\AboutController;
 use App\Http\PhotoController;
 use App\Http\UploadController;
 
-return [
-	'/'       => [ PhotoController::class, "index" ],
-	'/upload' => [ UploadController::class, "index" ],
-	'/about'  => [ AboutController::class, "index" ],
-];
+Router::get( '/', PhotoController::class, "index" );
+Router::get( '/upload', UploadController::class, "index" );
+Router::get( '/about', AboutController::class, "index" );
