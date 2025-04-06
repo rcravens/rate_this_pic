@@ -2,10 +2,12 @@ const user_menu_btn = document.getElementById('user_menu_btn');
 const user_menu = document.getElementById('user_menu');
 
 // Toggle menu visibility
-user_menu_btn.addEventListener('click', (e) => {
-    e.stopPropagation(); // Prevent this click from bubbling to the document
-    user_menu.classList.toggle('hidden');
-});
+if (user_menu_btn && user_menu) {
+    user_menu_btn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent this click from bubbling to the document
+        user_menu.classList.toggle('hidden');
+    });
+}
 
 // Hide menu when clicking outside
 document.addEventListener('click', (e) => {

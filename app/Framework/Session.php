@@ -2,6 +2,8 @@
 
 namespace App\Framework;
 
+use App\Models\User;
+
 class Session
 {
 	private static ?self $instance   = null;
@@ -44,6 +46,21 @@ class Session
 	public function logout(): void
 	{
 		session_destroy();
+	}
+
+	public function guest(): bool
+	{
+		return ! isset( $_SESSION[ 'user_id' ] );
+	}
+
+	public function user()
+	{
+		if ( $this->guest() )
+		{
+			return null;
+		}
+
+		return User::find( $_SESSION[ 'user_id' ] );
 	}
 
 	public function error( string $message ): static
