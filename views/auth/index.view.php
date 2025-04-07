@@ -5,9 +5,9 @@
         <form action="/login" method="POST" class="space-y-6">
             <div>
                 <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
-                <input type="email" name="email" id="email" required class="mt-1 w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-yellow-200"
+                <input type="email" name="email" id="email" required class="mt-1 w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-yellow-200"/>
 				<?php if ( $error = session()->validation_message( 'email' ) ): ?>
-                    <p class="mt-1 text-sm text-red-600"><?= $error ?></p>
+                    <p class="mt-1 text-sm text-red-600">{{ $error }}</p>
 				<?php endif; ?>
             </div>
 
@@ -15,7 +15,7 @@
                 <label for="password" class="mt-6 block text-sm font-medium text-gray-700">Password</label>
                 <input type="password" name="password" id="password" required class="mt-1 w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-yellow-200"/>
 				<?php if ( $error = session()->validation_message( 'password' ) ): ?>
-                    <p class="mt-1 text-sm text-red-600"><?= $error ?></p>
+                    <p class="mt-1 text-sm text-red-600">{{ $error }}</p>
 				<?php endif; ?>
             </div>
 

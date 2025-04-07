@@ -7,7 +7,7 @@
                     <label for="photo" class="block text-gray-700 text-sm font-medium mb-2">Select a photo to upload:</label>
                     <input type="file" name="photo" id="photo" class="block w-full text-sm text-gray-700 bg-gray-200 rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
 					<?php if ( $error = session()->validation_message( 'photo' ) ): ?>
-                        <p class="mt-1 text-sm text-red-600"><?= $error ?></p>
+                        <p class="mt-1 text-sm text-red-600">{{ $error }}</p>
 					<?php endif; ?>
                 </div>
 

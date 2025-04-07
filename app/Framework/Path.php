@@ -45,8 +45,10 @@ class Path
 		return require $path;
 	}
 
-	public function require_root( string $relative_path )
+	public function require_root( string $relative_path, array $data = [] )
 	{
+		extract( $data );
+		
 		$path = $this->root( $relative_path );
 
 		return require $path;

@@ -46,7 +46,6 @@ class View
 		if ( ! is_null( $this->layout ) && $this->view != $this->layout )
 		{
 			$this->data[ '_page_content' ] = $this->render_template( $view_path, $this->data );
-
 			View::with( $this->layout )
 			    ->data( $this->data )
 			    ->render();
@@ -63,8 +62,16 @@ class View
 	{
 		$template = file_get_contents( $view_path );
 
-		extract( $data );
+		// Support {{ $var }}
+		//
+		$template = preg_replace( '/\{\{\s*(.+?)\s*\}\}/', '<?= htmlspecialchars($1) ?>', $template );
 
+		// Support {!! $var !!}
+		//
+		$template = preg_replace( '/\{!!\s*(.+?)\s*!!\}/', '<?= $1 ?>', $template );
+
+		extract( $data );
+		
 		// Start output buffering
 		//
 		ob_start();
