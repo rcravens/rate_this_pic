@@ -58,7 +58,7 @@ class PhotoPolicy
 
 		return [
 			'user_id' => $user->id,
-			'url'     => '/photos' . $filename
+			'url'     => '/photos/' . $filename
 		];
 	}
 }
