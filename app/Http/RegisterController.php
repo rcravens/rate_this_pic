@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Framework\View;
+use App\Http\Policies\UserPolicy;
 use App\Models\User;
 
 class RegisterController
@@ -15,21 +16,8 @@ class RegisterController
 
 	public function store(): void
 	{
-		$name     = validate( 'name' )->string()->min( 5 )->max( 100 )->required();
-		$email    = validate( 'email' )->email()->max( 255 )->unique( User::class, 'email' )->required();
-		$password = validate( 'password' )->string()->min( 6 )->max( 255 )->confirm( 'password_confirmation' )->required();
-
-		$errors = array_merge( $name->errors(), $email->errors(), $password->errors() );
-		if ( count( $errors ) > 0 )
-		{
-			session()->invalid( $errors )->redirect_back();
-		}
-
-		$data = [
-			'name'     => $name->value(),
-			'email'    => $email->value(),
-			'password' => password_hash( $password->value(), PASSWORD_DEFAULT ),
-		];
+		$data = UserPolicy::ensure_valid_data();
+		
 		if ( User::insert( $data ) === 0 )
 		{
 			session()->error( 'Oops! Something went wrong adding record to the DB.' )

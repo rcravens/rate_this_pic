@@ -78,7 +78,7 @@ class View
 		return ob_get_clean();
 	}
 
-	private function get_path( $short_notation )
+	private function get_path( $short_notation ): string
 	{
 		// convention photo.index ===> views/photo/index.view.php
 		$parts = explode( '.', $short_notation );

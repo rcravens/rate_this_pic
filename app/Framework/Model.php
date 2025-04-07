@@ -2,11 +2,18 @@
 
 namespace App\Framework;
 
+/**
+ * @template TModel of Model
+ */
 abstract class Model
 {
 	protected static ?string $table;
 
-	protected array $wheres = [];
+	protected array   $wheres    = [];
+	protected ?int    $offset    = null;
+	protected ?int    $limit     = null;
+	protected ?string $order     = null;
+	protected string  $direction = 'ASC';
 
 	public static function query(): static
 	{
@@ -74,6 +81,52 @@ abstract class Model
 		return $db->execute( $sql, $data );
 	}
 
+	public static function update( $id, array $data ): int
+	{
+		$sql = 'UPDATE ' . static::table();
+
+		if ( count( $data ) > 0 )
+		{
+			$updates = [];
+			foreach ( $data as $key => $value )
+			{
+				$updates[] = $key . ' = :' . $key;
+			}
+
+			$sql .= ' SET ' . implode( ', ', $updates );
+		}
+		$sql .= ' WHERE id = :id';
+
+		$db = Database::instance();
+
+		return $db->execute( $sql, $data );
+	}
+
+	/**
+	 * @return list<TModel>
+	 */
+	protected static function hydrate_rows( $rows ): array
+	{
+		return array_map( [ static::class, 'hydrate' ], $rows );
+	}
+
+	/**
+	 * @param object $attributes
+	 *
+	 * @return TModel
+	 */
+	protected static function hydrate( object $db_row ): static
+	{
+		$instance = new static();
+
+		foreach ( get_object_vars( $db_row ) as $key => $value )
+		{
+			$instance->$key = $value;
+		}
+
+		return $instance;
+	}
+
 	private static function table(): string
 	{
 		if ( is_null( static::$table ) )
@@ -91,22 +144,64 @@ abstract class Model
 		return $this;
 	}
 
+	public function skip( int $offset ): Model
+	{
+		$this->offset = $offset;
+
+		return $this;
+	}
+
+	public function take( int $limit ): Model
+	{
+		$this->limit = $limit;
+
+		return $this;
+	}
+
+	public function order_by( string $column ): Model
+	{
+		$this->order     = $column;
+		$this->direction = 'ASC';
+
+		return $this;
+	}
+
+	public function order_by_desc( string $column ): Model
+	{
+		$this->order     = $column;
+		$this->direction = 'DESC';
+
+		return $this;
+	}
+
+	/**
+	 * @return list<TModel>
+	 */
 	public function get(): array
 	{
 		[ $sql, $params ] = $this->build_query();
 
 		$db = Database::instance();
 
-		return $db->all( $sql, $params );
+		$rows = $db->all( $sql, $params );
+
+		return static::hydrate_rows( $rows );
 	}
 
+	/**
+	 * @param object $attributes
+	 *
+	 * @return TModel
+	 */
 	public function first()
 	{
 		[ $sql, $params ] = $this->build_query();
 
 		$db = Database::instance();
 
-		return $db->first( $sql, $params );
+		$row = $db->first( $sql, $params );
+
+		return static::hydrate( $row );
 	}
 
 	public function count(): int
@@ -138,6 +233,20 @@ abstract class Model
 				$params[ $column ] = $value;
 			}
 			$sql .= ' WHERE ' . implode( ' AND ', $where_clauses );
+		}
+
+		if ( ! is_null( $this->order ) )
+		{
+			$sql .= ' ORDER BY ' . $this->order . ' ' . $this->direction;
+		}
+
+		if ( ! is_null( $this->limit ) && $this->limit > 0 )
+		{
+			$sql .= ' LIMIT ' . $this->limit;
+		}
+		if ( ! is_null( $this->offset ) && $this->offset > 0 )
+		{
+			$sql .= ' OFFSET ' . $this->offset;
 		}
 
 		return [ $sql, $params ];

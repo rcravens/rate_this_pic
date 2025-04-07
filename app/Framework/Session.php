@@ -53,7 +53,7 @@ class Session
 		return ! isset( $_SESSION[ 'user_id' ] );
 	}
 
-	public function user()
+	public function user(): ?User
 	{
 		if ( $this->guest() )
 		{
@@ -98,7 +98,7 @@ class Session
 		$this->redirect( Router::current_route() );
 	}
 
-	public function old( $key, $default = null )
+	public function old( $key, $default = null ): string
 	{
 		$val = $this->old[ $key ] ?? $default;
 

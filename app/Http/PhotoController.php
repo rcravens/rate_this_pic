@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Framework\View;
+use App\Http\Policies\PhotoPolicy;
 use App\Models\Photo;
 use App\Models\Review;
 use stdClass;
@@ -11,8 +12,14 @@ class PhotoController
 {
 	public function index(): View
 	{
-		$photos = Photo::all();
+		$page         = $_GET[ 'page' ] ?? 1;
+		$num_per_page = 8;
 
+		$photos = Photo::query()
+		               ->skip( ( $page - 1 ) * $num_per_page )
+		               ->take( $num_per_page )
+		               ->get();
+		
 		return View::with( 'photo.index' )
 		           ->title( 'Photo Browser' )
 		           ->data( [
@@ -59,22 +66,11 @@ class PhotoController
 
 	public function destroy(): void
 	{
-		$user = session()->user();
-		if ( is_null( $user ) )
-		{
-			session()->error( 'You must be logged in to delete photos.' );
-		}
-
 		$photo = Photo::find( $_GET[ 'id' ] );
-		if ( is_null( $photo ) )
-		{
-			session()->error( 'Photo not found.' )->redirect( '/' );
-		}
 
-		if ( $photo->user_id != $user->id )
-		{
-			session()->error( 'You do not have permission to delete this photo.' );
-		}
+		PhotoPolicy::ensure_authenticated();
+		PhotoPolicy::ensure_exists( $photo );
+		PhotoPolicy::ensure_ownership( $photo );
 
 		$photo_path = Photo::convert_to_path( $photo->url );
 		if ( file_exists( $photo_path ) )
