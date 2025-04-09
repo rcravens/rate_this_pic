@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Framework\View;
 use App\Http\Policies\UserPolicy;
 use App\Models\User;
+use JetBrains\PhpStorm\NoReturn;
 
 class RegisterController
 {
@@ -14,10 +15,10 @@ class RegisterController
 		           ->title( 'Registration' );
 	}
 
-	public function store(): void
+	#[NoReturn] public function store(): void
 	{
 		$data = UserPolicy::ensure_valid_data();
-		
+
 		if ( User::insert( $data ) === 0 )
 		{
 			session()->error( 'Oops! Something went wrong adding record to the DB.' )

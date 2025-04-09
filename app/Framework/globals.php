@@ -3,8 +3,9 @@
 use App\Framework\Path;
 use App\Framework\Session;
 use App\Framework\Validation;
+use JetBrains\PhpStorm\NoReturn;
 
-function dd( ...$vars )
+#[NoReturn] function dd( ...$vars ): void
 {
 	echo "<pre>";
 	foreach ( $vars as $var )

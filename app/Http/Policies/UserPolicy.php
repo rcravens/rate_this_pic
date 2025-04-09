@@ -6,7 +6,7 @@ use App\Models\User;
 
 class UserPolicy
 {
-	public static function ensure_valid_data()
+	public static function ensure_valid_data(): array
 	{
 		$name     = validate( 'name' )->string()->min( 5 )->max( 100 )->required();
 		$email    = validate( 'email' )->email()->max( 255 )->unique( User::class, 'email' )->required();

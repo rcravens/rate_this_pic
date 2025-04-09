@@ -6,6 +6,7 @@ use App\Framework\View;
 use App\Http\Policies\PhotoPolicy;
 use App\Models\Photo;
 use App\Models\Review;
+use JetBrains\PhpStorm\NoReturn;
 use stdClass;
 
 class PhotoController
@@ -19,7 +20,7 @@ class PhotoController
 		               ->skip( ( $page - 1 ) * $num_per_page )
 		               ->take( $num_per_page )
 		               ->get();
-		
+
 		return View::with( 'photo.index' )
 		           ->title( 'Photo Browser' )
 		           ->data( [
@@ -64,7 +65,7 @@ class PhotoController
 		                   ] );
 	}
 
-	public function destroy(): void
+	#[NoReturn] public function destroy(): void
 	{
 		$photo = Photo::find( $_GET[ 'id' ] );
 

@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Framework\View;
 use App\Http\Policies\AuthPolicy;
+use JetBrains\PhpStorm\NoReturn;
 
 class AuthenticationController
 {
@@ -13,7 +14,7 @@ class AuthenticationController
 		           ->title( 'Login' );
 	}
 
-	public function authenticate(): void
+	#[NoReturn] public function authenticate(): void
 	{
 		$user = AuthPolicy::ensure_can_login();
 
@@ -21,7 +22,7 @@ class AuthenticationController
 		session()->success( 'Welcome back!' )->redirect( '/' );
 	}
 
-	public function logout(): void
+	#[NoReturn] public function logout(): void
 	{
 		session()->logout();
 		session()->success( 'You have been logged out!' )->redirect( '/' );

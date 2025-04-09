@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Framework\View;
 use App\Http\Policies\PhotoPolicy;
 use App\Models\Photo;
+use JetBrains\PhpStorm\NoReturn;
 
 class UploadController
 {
@@ -14,7 +15,7 @@ class UploadController
 		           ->title( 'Upload' );
 	}
 
-	public function store(): void
+	#[NoReturn] public function store(): void
 	{
 		$user = PhotoPolicy::ensure_authenticated();
 

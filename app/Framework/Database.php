@@ -6,8 +6,8 @@ use PDO;
 
 class Database
 {
-	private static $instance = null;
-	private PDO    $pdo;
+	private static ?self $instance = null;
+	private PDO          $pdo;
 
 	public function __construct( string $host, int $port, string $db_name, string $username, string $password, string $charset = 'utf8mb4' )
 	{
@@ -74,7 +74,7 @@ class Database
 		return $result === false ? null : $result;
 	}
 
-	public function all( string $sql, array $params = [] )
+	public function all( string $sql, array $params = [] ): array
 	{
 		$statement = $this->pdo->prepare( $sql );
 		$statement->execute( $params );

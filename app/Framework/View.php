@@ -64,14 +64,14 @@ class View
 
 		// Support {{ $var }}
 		//
-		$template = preg_replace( '/\{\{\s*(.+?)\s*\}\}/', '<?= htmlspecialchars($1) ?>', $template );
+		$template = preg_replace( '/\{\{\s*(.+?)\s*}}/', '<?= htmlspecialchars($1) ?>', $template );
 
 		// Support {!! $var !!}
 		//
-		$template = preg_replace( '/\{!!\s*(.+?)\s*!!\}/', '<?= $1 ?>', $template );
+		$template = preg_replace( '/\{!!\s*(.+?)\s*!!}/', '<?= $1 ?>', $template );
 
 		extract( $data );
-		
+
 		// Start output buffering
 		//
 		ob_start();

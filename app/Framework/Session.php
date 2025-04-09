@@ -3,6 +3,7 @@
 namespace App\Framework;
 
 use App\Models\User;
+use JetBrains\PhpStorm\NoReturn;
 
 class Session
 {
@@ -87,13 +88,13 @@ class Session
 		return $this;
 	}
 
-	public function redirect( string $route )
+	#[NoReturn] public function redirect( string $route ): void
 	{
 		header( 'Location: ' . $route );
 		exit;
 	}
 
-	public function redirect_back()
+	#[NoReturn] public function redirect_back(): void
 	{
 		$this->redirect( Router::current_route() );
 	}

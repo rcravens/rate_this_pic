@@ -4,10 +4,11 @@ namespace App\Http;
 
 use App\Http\Policies\ReviewPolicy;
 use App\Models\Review;
+use JetBrains\PhpStorm\NoReturn;
 
 class ReviewController
 {
-	public function store(): void
+	#[NoReturn] public function store(): void
 	{
 		$photo = ReviewPolicy::ensure_photo_exists();
 
